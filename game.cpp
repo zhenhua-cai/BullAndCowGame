@@ -15,6 +15,10 @@ Game::Game():length(4),isRunning(true),count(0){
     secret=new int[length];
     guess=new char[length+1];
 }
+/*
+Nothing special here.
+I was planing to print a graph here. But I didn't do it.
+*/
 void Game::printIntro(){
     std::cout<<"Welcome to Bulls and Cows, a fun number game.\n";
     std::cout<<std::endl;
@@ -22,7 +26,10 @@ void Game::printIntro(){
     std::cout<<" digits?(No duplicate!)\n";
     std::cout<<std::endl;
 }
-
+/*
+generate the secret 4 digits.
+and no duplicate.
+*/
 void Game::generateData(){
     for(int i=0;i<length;i++){
         int digit=std::rand()%10;
@@ -33,6 +40,9 @@ void Game::generateData(){
         digits[digit]++;
     }
 }
+/*
+initilize the game object.
+*/
 bool Game::initGame(){
     for(int &i:digits)
         i=0;
@@ -42,6 +52,7 @@ bool Game::initGame(){
 }
 void Game::runLoop(){
     while(isRunning){
+        //print the intruduction of the game.
         printIntro();
         initGame();
         if(!update()){
@@ -51,18 +62,24 @@ void Game::runLoop(){
         }
         std::cout<<"The digits are: ";
         std::copy(secret,secret+length,std::ostream_iterator<int,char>(std::cout," "));
+        
+        /*after one round. ask user if they want to play again*/
         std::cout<<"\nDo you want to play again?(Y/N)";
         char again;
         std::cin.get(again);
         again=tolower(again);
         if(again=='n')
             isRunning=false;
+        /* consume the remaining characters in the input stream */
         while(std::cin.get()!='\n');
     }
 }
 void Game::exit(){
     std::cout<<"Have a nice day!"<<std::endl;
 }
+/*
+process the user input date.
+*/
 bool Game::process(){
     bull=cow=0;
     int size=(int)strlen(guess);
@@ -79,11 +96,15 @@ bool Game::process(){
     if(bull==length) return true;
     return false;
 }
+/*
+update the game.
+ask player to enter some digits.
+*/
 bool Game::update(){
     while(count<TOTAL){
         std::cout<<"Enter your "<<++count<<" guess(q to quit): ";
         std::cin.get(guess,length+1);
-        
+        //if player enter 'q',exit the game.
         if(tolower(guess[0])=='q') return false;
         if(process()){
             std::cout<<"You win!\n";
